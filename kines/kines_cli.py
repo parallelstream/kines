@@ -1,5 +1,7 @@
 import click
+
 from kines import partition_key_util, metrics, stream_util, shard_util, read_util
+from kines.decoders import decode_string, decode_protobuf
 
 
 @click.group()
@@ -61,10 +63,20 @@ def report(stream_name: str, period: int, hours: int):
 @click.option("-s", "--sequence-number", default=None, type=str, help="Sequence Number")
 @click.argument("shard-id", required=True)
 @click.argument("stream-name", required=True)
+@click.option("-d", "--decoder", required=False, default='base64', type=str)
+@click.option("--protobuf-decode-msg-type", required=False)
+@click.option("--protobuf-protodir", required=False)
+@click.option("--protobuf-file", required=False)
 @kines.command()
-def walk(stream_name: str, shard_id: str, sequence_number: str, number_of_records: int):
+def walk(stream_name: str, shard_id: str, sequence_number: str, number_of_records: int, decoder: str,
+         protobuf_decode_msg_type: str,
+         protobuf_protodir, protobuf_file):
+    decode_fn = decode_string
+    if decoder == 'protobuf':
+        decode_fn = lambda data: decode_protobuf(raw_bytes=data, proto_dir=protobuf_protodir,
+                                                 decode_msg_type=protobuf_decode_msg_type, proto_file=protobuf_file)
     """Walk through Kinesis Records"""
-    read_util.walk(stream_name, shard_id, sequence_number, number_of_records)
+    read_util.walk(stream_name, shard_id, sequence_number, number_of_records, decode_fn)
 
 
 @kines.command()
