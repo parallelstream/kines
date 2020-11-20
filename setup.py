@@ -4,14 +4,14 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="kines",
+    name="kines-proto",
     version="1.0.0",
     author="Dinesh Sawant",
     author_email="dineshsawant300@gmail.com",
     description="Friendly Command Line Interface for Amazon Kinesis Data Streams",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/dinsaw/kines",
+    url="https://github.com/parallelstream/kines",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
@@ -27,6 +27,6 @@ setuptools.setup(
     ],
     entry_points='''
         [console_scripts]
-        kines=kines.kines_cli:kines
+        kines-proto=kines.kines_cli:kines
     ''',
 )

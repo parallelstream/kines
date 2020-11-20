@@ -6,7 +6,7 @@ Friendly Command Line Interface for [Amazon Kinesis Data Streams](https://aws.am
 ![Kines Demo](https://raw.githubusercontent.com/dinsaw/kines/master/demo/kines-demo.gif)
 
 #### Install
-- `pip install kines`
+- `pip install kines-proto
 
 #### Setup 
 - `aws configure`
@@ -43,6 +43,11 @@ This command comes handy when you want to determine shard for a partition key. T
 
 You can use this command to debug kinesis records. This command internally creates a [Shard Iterator](https://docs.aws.amazon.com/kinesis/latest/APIReference/API_GetShardIterator.html). If you don't specify `sequence-number` then a ShardIterator is created with type `TRIM_HORIZON`, which allows you to fetch from oldest Kinesis records in shard. When you specify `sequence-number` a ShardIterator is created with `AT_SEQUENCE_NUMBER` type, which fetches data from the specified sequence number.
 The Kinesis record's data is decoded using `base64` decoder. You can press ⏎ to fetch more records or type `n` to abort.
+
+#### Walk through kinesis records with protobuf decoder
+- `kines walk <stream-name> <shard-id> -s <sequence-number> -n <number-of-records-per-call> -d protobuf --protobuf-decode-msg-type opentelemetry.proto.metrics.v1.ResourceMetrics --protobuf-protodir=/Users/apolyakov/dev/opentelemetry-proto --protobuf-file=opentelemetry/proto/metrics/v1/metrics.proto`
+
+You can optionally specify protobuf as a decoder in which case you would need to point it to file and directory containing proto definitions as well as specify concrete message type for decoding. Note - this requires `protoc` installed.twine upload --skip-existing dist/*
 
 ![Kines Walk](https://raw.githubusercontent.com/dinsaw/kines/master/demo/kines-walk-demo.gif)
 
